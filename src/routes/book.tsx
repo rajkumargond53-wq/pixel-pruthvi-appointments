@@ -15,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { clinic, formatSlot, pageMeta, services, timeSlots } from "@/lib/site";
 
 export const Route = createFileRoute("/book")({
-  validateSearch: (s: Record<string, unknown>) => ({ service: typeof s.service === "string" ? s.service : undefined }),
+  validateSearch: (s: Record<string, unknown>): { service?: string } => (typeof s.service === "string" ? { service: s.service } : {}),
   head: () => ({ meta: pageMeta("Book an Appointment — Dr. Pruthvi Clinic", "Book a consultation with Dr. Pruthvi online. Choose your service, date and an available time slot.") }),
   component: Book,
 });
