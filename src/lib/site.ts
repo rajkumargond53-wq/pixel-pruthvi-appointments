@@ -38,7 +38,7 @@ export const testimonials = [
 export const timeSlots = ["09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30"];
 
 export function formatSlot(s: string) {
-  const [h, m] = s.split(":").map(Number);
+  const [h = 0, m = 0] = s.split(":").map(Number);
   const ampm = h >= 12 ? "PM" : "AM";
   return `${((h + 11) % 12) + 1}:${String(m).padStart(2, "0")} ${ampm}`;
 }

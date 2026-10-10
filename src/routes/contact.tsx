@@ -65,20 +65,20 @@ function Contact() {
               <h2 className="text-2xl text-primary-deep">Send a message</h2>
               <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field id="name" label="Name" error={errors.name}><Input id="name" name="name" autoComplete="name" /></Field>
-                <Field id="email" label="Email" error={errors.email}><Input id="email" name="email" type="email" autoComplete="email" /></Field>
+                <Field id="name" label="Name" error={errors["name"]}><Input id="name" name="name" autoComplete="name" /></Field>
+                <Field id="email" label="Email" error={errors["email"]}><Input id="email" name="email" type="email" autoComplete="email" /></Field>
               </div>
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field id="phone" label="Phone (optional)" error={errors.phone}><Input id="phone" name="phone" type="tel" autoComplete="tel" /></Field>
-                <Field id="subject" label="Subject" error={errors.subject}><Input id="subject" name="subject" /></Field>
+                <Field id="phone" label="Phone (optional)" error={errors["phone"]}><Input id="phone" name="phone" type="tel" autoComplete="tel" /></Field>
+                <Field id="subject" label="Subject" error={errors["subject"]}><Input id="subject" name="subject" /></Field>
               </div>
-              <Field id="message" label="Message" error={errors.message}><Textarea id="message" name="message" rows={5} placeholder="Please avoid sharing detailed medical information here." /></Field>
+              <Field id="message" label="Message" error={errors["message"]}><Textarea id="message" name="message" rows={5} placeholder="Please avoid sharing detailed medical information here." /></Field>
               <div>
                 <div className="flex items-start gap-3">
                   <Checkbox id="consent" checked={consent} onCheckedChange={(v) => setConsent(v === true)} />
                   <Label htmlFor="consent" className="text-sm font-normal leading-snug">I agree to the <Link to="/privacy" className="text-primary underline">privacy policy</Link>.</Label>
                 </div>
-                {errors.consent && <p className="mt-1 text-sm text-destructive">{errors.consent}</p>}
+                {errors["consent"] && <p className="mt-1 text-sm text-destructive">{errors["consent"]}</p>}
               </div>
               {status === "error" && <p className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive" role="alert">Sorry, your message couldn't be sent. Please try again or call the clinic.</p>}
               <Button type="submit" size="lg" className="w-full rounded-full" disabled={status === "sending"}>

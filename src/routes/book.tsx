@@ -15,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { clinic, formatSlot, pageMeta, services, timeSlots } from "@/lib/site";
 
 export const Route = createFileRoute("/book")({
-  validateSearch: (s: Record<string, unknown>): { service?: string } => (typeof s.service === "string" ? { service: s.service } : {}),
+  validateSearch: (s: Record<string, unknown>): { service?: string } => (typeof s["service"] === "string" ? { service: s["service"] as string } : {}),
   head: () => ({ meta: pageMeta("Book an Appointment — Dr. Pruthvi Clinic", "Book a consultation with Dr. Pruthvi online. Choose your service, date and an available time slot.") }),
   component: Book,
 });
@@ -39,7 +39,7 @@ const schema = z.object({
 
 function Book() {
   const search = Route.useSearch();
-  const [service, setService] = useState(search.service && services.some((s) => s.name === search.service) ? search.service : "");
+  const [service, setService] = useState(search.service && services.some((s) => s.name === search.service) ? (search.service ?? "") : "");
   const [patientType, setPatientType] = useState("");
   const [date, setDate] = useState("");
   const [slot, setSlot] = useState("");
@@ -67,7 +67,7 @@ function Book() {
   const t = todayIST();
   const available = timeSlots.filter((s) => {
     if (booked?.includes(s)) return false;
-    if (date === t.date) { const [h, m] = s.split(":").map(Number); return h * 60 + m > t.minutes + 30; }
+    if (date === t.date) { const [h, m] = s.split(":").map(Number); return (h ?? 0) * 60 + (m ?? 0) > t.minutes + 30; }
     return true;
   });
 
@@ -78,7 +78,7 @@ function Book() {
     const parsed = schema.safeParse({ fullName: fd.get("fullName"), phone: fd.get("phone"), email: fd.get("email"), reason: fd.get("reason") || undefined, patientType, service, date, slot, consent });
     const errs: Record<string, string> = {};
     if (!parsed.success) parsed.error.issues.forEach((i) => { errs[String(i.path[0])] ??= i.message; });
-    if (date && date < todayIST().date) errs.date = "Please choose today or a future date";
+    if (date && date < todayIST().date) errs["date"] = "Please choose today or a future date";
     if (Object.keys(errs).length || !parsed.success) { setErrors(errs); return; }
     setErrors({}); setStatus("sending"); setSubmitError("");
     const d = parsed.data;
@@ -124,10 +124,10 @@ function Book() {
           <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
           <fieldset className="space-y-5">
             <legend className="font-display text-2xl text-primary-deep">1. Your details</legend>
-            <Field id="fullName" label="Full name" error={errors.fullName}><Input id="fullName" name="fullName" autoComplete="name" /></Field>
+            <Field id="fullName" label="Full name" error={errors["fullName"]}><Input id="fullName" name="fullName" autoComplete="name" /></Field>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field id="phone" label="Phone number" error={errors.phone}><Input id="phone" name="phone" type="tel" autoComplete="tel" /></Field>
-              <Field id="email" label="Email address" error={errors.email}><Input id="email" name="email" type="email" autoComplete="email" /></Field>
+              <Field id="phone" label="Phone number" error={errors["phone"]}><Input id="phone" name="phone" type="tel" autoComplete="tel" /></Field>
+              <Field id="email" label="Email address" error={errors["email"]}><Input id="email" name="email" type="email" autoComplete="email" /></Field>
             </div>
             <div className="space-y-2">
               <Label>Are you a new or returning patient?</Label>
@@ -136,20 +136,20 @@ function Book() {
                   <div key={v} className="flex items-center gap-2"><RadioGroupItem value={v} id={`pt-${v}`} /><Label htmlFor={`pt-${v}`} className="font-normal">{l}</Label></div>
                 ))}
               </RadioGroup>
-              {errors.patientType && <p className="text-sm text-destructive" role="alert">{errors.patientType}</p>}
+              {errors["patientType"] && <p className="text-sm text-destructive" role="alert">{errors["patientType"]}</p>}
             </div>
           </fieldset>
 
           <fieldset className="space-y-5">
             <legend className="font-display text-2xl text-primary-deep">2. Appointment</legend>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field id="service" label="Consultation type" error={errors.service}>
+              <Field id="service" label="Consultation type" error={errors["service"]}>
                 <Select value={service} onValueChange={setService}>
                   <SelectTrigger id="service"><SelectValue placeholder="Choose a service" /></SelectTrigger>
                   <SelectContent>{services.map((s) => <SelectItem key={s.slug} value={s.name}>{s.name}</SelectItem>)}</SelectContent>
                 </Select>
               </Field>
-              <Field id="date" label="Preferred date" error={errors.date}>
+              <Field id="date" label="Preferred date" error={errors["date"]}>
                 <Input id="date" type="date" min={today} value={date} onChange={(e) => setDate(e.target.value)} />
               </Field>
             </div>
@@ -170,9 +170,9 @@ function Book() {
                     ))}
                   </div>
                 )}
-              {errors.slot && <p className="text-sm text-destructive" role="alert">{errors.slot}</p>}
+              {errors["slot"] && <p className="text-sm text-destructive" role="alert">{errors["slot"]}</p>}
             </div>
-            <Field id="reason" label="Reason for visit (optional)" error={errors.reason}>
+            <Field id="reason" label="Reason for visit (optional)" error={errors["reason"]}>
               <Textarea id="reason" name="reason" rows={3} maxLength={500} placeholder="A short note is enough — no detailed medical history needed." />
             </Field>
           </fieldset>
@@ -183,7 +183,7 @@ function Book() {
                 <Checkbox id="consent" checked={consent} onCheckedChange={(v) => setConsent(v === true)} />
                 <Label htmlFor="consent" className="text-sm font-normal leading-snug">I agree to the <Link to="/privacy" className="text-primary underline">privacy policy</Link> and consent to the clinic contacting me about this appointment.</Label>
               </div>
-              {errors.consent && <p className="mt-1 text-sm text-destructive" role="alert">{errors.consent}</p>}
+              {errors["consent"] && <p className="mt-1 text-sm text-destructive" role="alert">{errors["consent"]}</p>}
             </div>
             {status === "error" && <p className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive" role="alert">{submitError}</p>}
             <Button type="submit" size="lg" className="w-full rounded-full" disabled={status === "sending" || isSunday}>
