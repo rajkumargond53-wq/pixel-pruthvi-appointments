@@ -14,13 +14,110 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          appointment_date: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          patient_type: string
+          phone: string
+          reason: string | null
+          reference: string
+          service: string
+          status: string
+          time_slot: string
+        }
+        Insert: {
+          appointment_date: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          patient_type: string
+          phone: string
+          reason?: string | null
+          reference: string
+          service: string
+          status?: string
+          time_slot: string
+        }
+        Update: {
+          appointment_date?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          patient_type?: string
+          phone?: string
+          reason?: string | null
+          reference?: string
+          service?: string
+          status?: string
+          time_slot?: string
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          subject?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      book_appointment: {
+        Args: {
+          p_date: string
+          p_email: string
+          p_full_name: string
+          p_patient_type: string
+          p_phone: string
+          p_reason: string
+          p_service: string
+          p_slot: string
+        }
+        Returns: string
+      }
+      get_booked_slots: { Args: { p_date: string }; Returns: string[] }
+      submit_contact: {
+        Args: {
+          p_email: string
+          p_message: string
+          p_name: string
+          p_phone: string
+          p_subject: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
