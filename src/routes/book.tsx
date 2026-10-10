@@ -132,7 +132,7 @@ function Book() {
             <div className="space-y-2">
               <Label>Are you a new or returning patient?</Label>
               <RadioGroup value={patientType} onValueChange={setPatientType} className="flex gap-6" aria-label="Patient type">
-                {[["new", "New patient"], ["returning", "Returning patient"]].map(([v, l]) => (
+                {([["new", "New patient"], ["returning", "Returning patient"]] as const).map(([v, l]) => (
                   <div key={v} className="flex items-center gap-2"><RadioGroupItem value={v} id={`pt-${v}`} /><Label htmlFor={`pt-${v}`} className="font-normal">{l}</Label></div>
                 ))}
               </RadioGroup>
