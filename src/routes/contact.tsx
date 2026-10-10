@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PageHero } from "@/components/site-chrome";
+import { Field } from "@/components/field";
 import { ContactDetails } from "@/components/sections";
 import { supabase } from "@/integrations/supabase/client";
 import { pageMeta } from "@/lib/site";
@@ -89,15 +90,5 @@ function Contact() {
         <ContactDetails />
       </div>
     </>
-  );
-}
-
-export function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
-      {children}
-      {error && <p className="text-sm text-destructive" id={`${id}-error`}>{error}</p>}
-    </div>
   );
 }
